@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="Blogers.UI.Pages.CreateBlogerPage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:Blogers.UI.ViewModels"
+             x:DataType="viewmodels:CreateBlogerPageViewModel"
+             Title="Новый блогер">
+
+    <VerticalStackLayout Padding="20" Spacing="15">
+
+        <Entry Placeholder="Имя" 
+               Text="{Binding Name}" />
+
+        <DatePicker Date="{Binding DateOfBirth}" 
+                    MaximumDate="{Binding CurrentDate}"/>
+
+        <Entry Placeholder="Никнейм" 
+               Text="{Binding Nickname}" />
+
+        <Entry Placeholder="Количество подписчиков" 
+               Text="{Binding FollowersNumber}" 
+               Keyboard="Numeric" />
+
+        <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
+            <Button Text="Сохранить" 
+                    Command="{Binding SaveCommand}" 
+                    BackgroundColor="CornflowerBlue"/>
+            <Button Text="Отмена" 
+                    Command="{Binding CancelCommand}" 
+                    BackgroundColor="Gray"/>
+        </HorizontalStackLayout>
+
+    </VerticalStackLayout>
+</ContentPage>

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="Blogers.UI.Pages.BlogersPage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:Blogers.UI.ViewModels"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             Title="BlogersPage"
+             x:Name="MyPage"
+             xmlns:LikesColor="clr-namespace:Blogers.UI.ValueConverters">
+
+    <ContentPage.Resources>
+        <LikesColor:LikeToColorValueConverter x:Key="LikesToColor"/>
+        <LikesColor:IdToImageConverter x:Key="IdToImageConverter" />
+    </ContentPage.Resources>
+    
+    <ContentPage.Behaviors>
+        <toolkit:EventToCommandBehavior 
+            EventName="Loaded"
+            BindingContext="{Binding BindingContext, Source={x:Reference MyPage}}"
+            Command="{Binding UpdateBlogersListCommand}" />
+    </ContentPage.Behaviors>
+
+    <VerticalStackLayout Spacing="10" Padding="10">
+
+        <Picker Title="Выберите блогера"
+                ItemsSource="{Binding Blogers}"
+                ItemDisplayBinding="{Binding Nickname}"
+                SelectedItem="{Binding SelectedBloger}">
+            <Picker.Behaviors>
+                <toolkit:EventToCommandBehavior 
+                    EventName="SelectedIndexChanged"
+                    BindingContext="{Binding BindingContext, Source={x:Reference MyPage}}"
+                    Command="{Binding UpdateStoriesListCommand}" />
+            </Picker.Behaviors>
+        </Picker>
+
+        <StackLayout IsVisible="{Binding ShowBlogerCard}">
+
+            <Border Stroke="LightGray"
+                    StrokeThickness="2"
+                    Padding="15"
+                    Margin="0,10">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="{Binding BlogerNickname}" FontSize="20" FontAttributes="Bold"/>
+                    <HorizontalStackLayout Spacing="10">
+                        <Label Text="   Name:  " FontSize="14" FontAttributes="Bold"/>
+                        <Label Text="{Binding BlogerName}" FontSize="14"/>
+                    </HorizontalStackLayout>
+                    <HorizontalStackLayout Spacing="10">
+                        <Label Text="   Followers: " FontSize="14" FontAttributes="Bold"/>
+                        <Label Text="{Binding BlogerFollowers}" FontSize="14"/>
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+            </Border>
+
+            <Label Text="Stories:" FontSize="16" FontAttributes="Bold" Margin="0,10,0,5"/>
+
+            <CollectionView ItemsSource="{Binding Stories}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="{x:Null}">
+                        <Border Stroke="{Binding LikesCount, Converter={StaticResource LikesToColor}}"
+                    Padding="10,8" Margin="0,3" StrokeThickness="1">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:BlogersPageViewModel}}, 
+                                                            Path=ShowDetailsCommand}"
+                                          CommandParameter="{Binding}" />
+                            </Border.GestureRecognizers>
+
+                            <HorizontalStackLayout Spacing="10">
+
+                                <!-- Круглая иконка фото (слева) -->
+                                <Frame HeightRequest="50"
+                                       WidthRequest="50"
+                                       CornerRadius="25"
+                                       Padding="0"
+                                       BackgroundColor="LightGray"
+                                       HorizontalOptions="Start"
+                                       VerticalOptions="Center">
+                                    <Image Source="{Binding Id, Converter={StaticResource IdToImageConverter}}"
+                                           Aspect="AspectFill"
+                                           HeightRequest="50"
+                                           WidthRequest="50"/>
+                                </Frame>
+
+                                <Label Text="{Binding Description}" 
+                                       FontSize="16"
+                                       VerticalOptions="Center"
+                                       HorizontalOptions="StartAndExpand"/>
+
+                            </HorizontalStackLayout>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+        </StackLayout>
+
+    </VerticalStackLayout>
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Добавить блогера" 
+                 Command="{Binding CreateBlogerCommand}" 
+                 Order="Primary" />
+        <ToolbarItem Text="Добавить иторию" 
+                 Command="{Binding CreateStoryCommand}" 
+                 Order="Primary" />
+    </ContentPage.ToolbarItems>
+
+</ContentPage>

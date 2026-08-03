@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="Blogers.UI.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:Blogers.UI"
+    xmlns:pages="clr-namespace:Blogers.UI.Pages"
+    Title="Blogers.UI"
+
+    FlyoutBehavior="Flyout">
+
+    <FlyoutItem Title="Home">
+        <ShellContent ContentTemplate="{DataTemplate local:MainPage}" />
+        <FlyoutItem.Icon>
+            <FontImageSource Glyph="&#xf015;" 
+                         FontFamily="fontawesome" 
+                         Size="24" 
+                         Color="{AppThemeBinding Light=Black, Dark=White}" />
+        </FlyoutItem.Icon>
+    </FlyoutItem>
+
+    <FlyoutItem Title="Blogers List">
+        <ShellContent ContentTemplate="{DataTemplate pages:BlogersPage}" />
+        <FlyoutItem.Icon>
+            <FontImageSource Glyph="&#xf2bd;" 
+                         FontFamily="fontawesome" 
+                         Size="24" 
+                         Color="{AppThemeBinding Light=Black, Dark=White}" />
+        </FlyoutItem.Icon>
+    </FlyoutItem>
+
+</Shell>
+    
+    
