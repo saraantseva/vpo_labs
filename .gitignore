@@ -6,7 +6,8 @@
 *.slnx
 *.vssscc
 *.vsix
-
+TestResults/
+CoverageReport/
 [Bb]in/
 [Oo]bj/
 [Dd]ebug/

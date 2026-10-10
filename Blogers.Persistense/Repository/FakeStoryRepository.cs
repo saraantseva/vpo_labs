@@ -1,12 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Linq.Dynamic.Core;
 using System.Linq.Expressions;
-using System.Text;
 
 namespace Blogers.Persistense.Repository
 {
+    [ExcludeFromCodeCoverage]
     public class FakeStoryRepository : IRepository<Story>
     {
 

@@ -1,64 +1,119 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿namespace Blogers.Domain.Entities;
 
-namespace Blogers.Domain.Entities
+public class Story : Entity
 {
-    public class Story : Entity
+    private Story() { }
+
+    public string Description { get; private set; }
+    public int LikesCount { get; private set; }
+    public int ViewCount { get; private set; }
+    public DateTime CreationDate { get; private set; }
+    public StoryStatus Status { get; private set; }
+
+    public int? BlogerId { get; private set; }
+
+    public Story(string description, int? likes, int? views, int? blogerId,
+                 StoryStatus status = StoryStatus.Published)
     {
-        private Story() { }
-        public string Description { get; private set; }
-        public int LikesCount { get; private set; }
-        public int ViewCount { get; private set; }
-        public DateTime CreationDate { get; private set; }
-
-        public int? BlogerId {  get; private set; }
-        public Story(string description, int? likes, int? views, int? blogerId) {
-            if (System.String.IsNullOrEmpty(description))
-            {
-                throw new ArgumentNullException("Nickname musn't be empty!", nameof(description));
-            }
-
-            Description = description;
-            LikesCount = likes ?? 0;
-            ViewCount = views ?? 0;
-            BlogerId = blogerId;
-
-            if (LikesCount < 0) {
-                throw new ArgumentOutOfRangeException("Count of likes must be greater than zero!", nameof(likes));
-            }
-            if (ViewCount < 0)
-            {
-                throw new ArgumentOutOfRangeException("Count of views must be greater than zero!", nameof(views));
-            }
-
-            CreationDate = DateTime.Now;
+        if (System.String.IsNullOrEmpty(description))
+        {
+            throw new ArgumentNullException("Description musn't be empty!", nameof(description));
         }
 
-        public void Changedescription(string descr)
+        Description = description;
+        LikesCount = likes ?? 0;
+        ViewCount = views ?? 0;
+        BlogerId = blogerId;
+        Status = status;
+
+        if (LikesCount < 0)
         {
-            if (String.IsNullOrEmpty(descr)) return;
-            Description = descr;
+            throw new ArgumentOutOfRangeException("Count of likes must be non-negative!", nameof(likes));
         }
-        public void AssociateWith(int blogerId)
+        if (ViewCount < 0)
         {
-            if (blogerId < 0) return;
-            BlogerId = blogerId;
+            throw new ArgumentOutOfRangeException("Count of views must be non-negative!", nameof(views));
         }
-        public void StopAssociateWith()
+
+        CreationDate = DateTime.Now;
+    }
+
+
+    public void Changedescription(string descr)
+    {
+        if (String.IsNullOrEmpty(descr)) return;
+        Description = descr;
+    }
+
+    public void AssociateWith(int blogerId)
+    {
+        if (blogerId < 0) return;
+        BlogerId = blogerId;
+    }
+
+    public void StopAssociateWith()
+    {
+        BlogerId = null;
+    }
+
+    public void ChangeViewCount(int count)
+    {
+        if (count <= ViewCount) return;
+        ViewCount = count;
+    }
+
+    public void ChangeLikesCount(int count)
+    {
+        if (count < 0) return;
+        LikesCount = count;
+    }
+
+    // ---------- Переходы состояний ----------
+
+    /// <summary>
+    /// Опубликовать историю. Разрешено только из состояния Draft.
+    /// </summary>
+    public void Publish()
+    {
+        if (Status == StoryStatus.Published)
         {
-            BlogerId = null;
+            throw new InvalidOperationException("Story is already published.");
         }
-        public void ChangeViewCount(int count)
+        if (Status == StoryStatus.Archived)
         {
-            if (count <= ViewCount) return;
-            ViewCount = count;
+            throw new InvalidOperationException("Cannot publish an archived story.");
         }
-        public void ChangeLikesCount(int count)
+
+        Status = StoryStatus.Published;
+    }
+
+    /// <summary>
+    /// Снять историю с публикации. Разрешено только из состояния Published.
+    /// </summary>
+    public void Archive()
+    {
+        if (Status == StoryStatus.Draft)
         {
-            if (count < 0) return;
-            LikesCount = count;
+            throw new InvalidOperationException("Cannot archive a draft story.");
         }
-       
+        if (Status == StoryStatus.Archived)
+        {
+            throw new InvalidOperationException("Story is already archived.");
+        }
+
+        Status = StoryStatus.Archived;
+    }
+
+    /// <summary>
+    /// Вернуть историю из архива в публикацию.
+    /// </summary>
+    public void Unarchive()
+    {
+        if (Status != StoryStatus.Archived)
+        {
+            throw new InvalidOperationException("Only archived story can be unarchived.");
+        }
+
+        Status = StoryStatus.Published;
     }
 }

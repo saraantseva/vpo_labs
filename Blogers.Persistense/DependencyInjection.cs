@@ -2,12 +2,11 @@
 using Microsoft.Extensions.DependencyInjection;
 using Blogers.Persistense.Data;
 using Blogers.Persistense.Repository;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Blogers.Persistense
 {
+    [ExcludeFromCodeCoverage]
     public static class DependencyInjection
     {
         public static IServiceCollection AddPersistence(this IServiceCollection services)

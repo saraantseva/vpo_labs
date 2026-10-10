@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Diagnostics.CodeAnalysis;
 using IUnitOfWork = Blogers.Domain.Abstractions.IUnitOfWork;
 
 namespace Blogers.Persistense.Repository
 {
+    [ExcludeFromCodeCoverage]
     public class FakeUnitOfWork : IUnitOfWork
     {
         public IRepository<Bloger> BlogerRepository { get; }

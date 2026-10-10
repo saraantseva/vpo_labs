@@ -9,6 +9,9 @@
   <ItemGroup>
     <ProjectReference Include="..\Blogers.Domain\Blogers.Domain.csproj" />
   </ItemGroup>
+  <ItemGroup>
+	<InternalsVisibleTo Include="Blogers.Tests" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="MediatR" Version="14.1.0" />

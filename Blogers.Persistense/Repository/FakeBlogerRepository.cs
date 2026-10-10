@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
-using System.Text;
 
 namespace Blogers.Persistense.Repository
 {
+    [ExcludeFromCodeCoverage]
     public class FakeBlogerRepository : IRepository<Bloger>
     {
         private readonly List<Bloger> _blogers;

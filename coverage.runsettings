@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RunSettings>
+  <DataCollectionRunSettings>
+    <DataCollectors>
+      <DataCollector friendlyName="XPlat code coverage">
+        <Configuration>
+          <Format>cobertura</Format>
+          <ExcludeByAttribute>GeneratedCodeAttribute,CompilerGenerated,ExcludeFromCodeCoverage</ExcludeByAttribute>
+          <ExcludeByFile>**/Migrations/**/*.cs</ExcludeByFile>
+          <Include>
+            [Blogers.Domain]*
+            [Blogers.Application]*
+            [Blogers.Persistense]*
+          </Include>
+          <Exclude>
+            [Blogers.UI]*
+            [Blogers.Application]Blogers.Application.DbInitializer
+            [Blogers.Application]Blogers.Application.DependencyInjection
+            [Blogers.Persistense]Blogers.Persistense.DependencyInjection
+            [Blogers.Persistense]Blogers.Persistense.Data.AppDbContext
+            [Blogers.Persistense]Blogers.Persistense.Repository.FakeBlogerRepository
+            [Blogers.Persistense]Blogers.Persistense.Repository.FakeStoryRepository
+            [Blogers.Persistense]Blogers.Persistense.Repository.FakeUnitOfWork
+          </Exclude>
+        </Configuration>
+      </DataCollector>
+    </DataCollectors>
+  </DataCollectionRunSettings>
+</RunSettings>

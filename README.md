@@ -25,6 +25,7 @@
 | Медиатор | MediatR |
 | MVVM | CommunityToolkit.Mvvm |
 | UI-компоненты | CommunityToolkit.Maui |
+| Тестирование | xUnit, Moq, FluentAssertions, Coverlet, ReportGenerator |
 
 ## Архитектура
 
@@ -47,6 +48,7 @@ graph TD
 | `Blogers.Application` | Бизнес-логика: CQRS-команды и запросы (MediatR), `DbInitializer` с seed-данными, регистрация MediatR |
 | `Blogers.Persistense` | Работа с БД: `AppDbContext`, `EfRepository<T>`, `EfUnitOfWork`, Fake-реализации, регистрация DI |
 | `Blogers.UI` | MAUI-приложение: страницы (XAML), ViewModels, конвертеры, Shell-навигация, композиция DI |
+| `Blogers.Tests` | Юнит-, интеграционные и сценарные тесты, оценка покрытия |
 
 ## Точки интеграции
 
@@ -110,6 +112,48 @@ dotnet test
 - Подсветка историй по количеству лайков
 - Жизненный цикл истории: `Draft → Published → Archived` (см. `docs/state-diagram.md`)
 - Shell-навигация между страницами
+
+## Тестирование
+
+Проект покрыт сценарными, интеграционными и юнит-тестами.
+Покрытие кода — **100%**.
+
+### Запуск тестов
+
+```
+dotnet test
+```
+
+### Оценка покрытия
+
+```
+dotnet test --collect:"XPlat Code Coverage" --settings ./coverage.runsettings --results-directory ./TestResults
+reportgenerator -reports:./TestResults/**/coverage.cobertura.xml -targetdir:./CoverageReport -reporttypes:Html
+```
+
+HTML-отчёт: `CoverageReport/index.html`. Целевое покрытие — не ниже 70%.
+
+### Структура тестов
+
+| Папка | Что тестируется |
+|---|---|
+| `Domain/` | Сущности `Bloger`, `Story`, переходы состояний |
+| `Application/` | CQRS-хендлеры с моками `IUnitOfWork` |
+| `Integration/` | Репозитории на SQLite in-memory |
+| `Scenarios/` | Полные сценарии жизненного цикла Story |
+
+### Применённые практики
+
+- **AAA** (Arrange–Act–Assert) в каждом тесте
+- **Параметризация** через `[Theory]` / `[InlineData]` для граничных случаев
+- **Негативные тесты** — исключения, некорректный ввод, null
+- **Моки** — Moq для изоляции `IUnitOfWork`
+- **Независимость** — каждый тест создаёт собственные данные; интеграционные используют отдельное SQLite in-memory подключение с `IDisposable`
+
+### Примечание
+
+Заглушки HTTP-запросов не применяются: приложение не имеет внешних HTTP-интеграций
+(полностью офлайн, SQLite). Все интеграционные тесты работают с реальной SQLite in-memory.
 
 ## Документация
 
